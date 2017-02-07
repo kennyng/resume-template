@@ -1,0 +1,420 @@
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8 Unicode
+% -*- coding: UTF-8; -*-
+% vim: set fenc=utf-8
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% resume.tex
+%% -----------
+%% LaTeX Resume (Curriculum Vitae)
+%% > Compile with: `xelatex resume.tex`
+%%
+%% Author: Kenny Ng
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[letterpaper,10pt]{article}
+
+% ============================================================================
+% LOAD PACKAGES
+% ============================================================================
+% For configuring page margins.
+\usepackage[top=1.0cm,left=1.5cm,right=1.5cm,bottom=1.0cm]{geometry}
+% For loading fonts.
+\usepackage{fontspec}
+% For custom sections.
+\usepackage{titlesec}
+% For handling hyperlinks.
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Kenny Ng - Résumé}, pdfauthor={Kenny Ng}}
+% For icon fonts.
+\usepackage{fontawesome}
+% For fixed length tables.
+\usepackage{array}
+% For handling text alignment.
+\usepackage{ragged2e}
+% For dealing with paragraphs.
+\usepackage{parskip}
+% For handling list environment.
+\usepackage{enumitem}
+% For calculations (such as textwidth).
+\usepackage{calc}
+% For managing math fonts (list symbols).
+\usepackage[math-style=TeX,vargreek-shape=unicode]{unicode-math}
+% For conditional statements.
+\usepackage{xifthen}
+
+
+
+
+% ============================================================================
+% CONFIGURE FONTS
+% ============================================================================
+% Configure directory location for fonts. [Default: 'fonts/']
+\newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
+\fontdir
+\defaultfontfeatures{Ligatures=TeX}
+
+% Set font for header.
+\newfontfamily\headerfont[
+  Path=\@fontdir,
+  UprightFont=*-Regular,
+  ItalicFont=*-Italic,
+  BoldFont=*-SemiBold,
+]{Raleway}
+
+% Set main font.
+\setmainfont[
+  Path=\@fontdir,
+  UprightFont=*-Regular,
+  ItalicFont=*-Italic,
+  BoldFont=*-SemiBold,
+]{SourceSansPro}
+
+
+
+
+% ============================================================================
+% FORMATTING DEFINITIONS (for custom sections and entries)
+% ============================================================================
+% Define environment for Description items.
+\newenvironment{Description}{%
+  \vspace{\gapDescriptionBefore}
+  \begin{justify}
+  \begin{itemize}[label=\textbullet,leftmargin=2ex,nosep]
+}{%
+  \end{itemize}
+  \vspace{\gapDescriptionAfter}
+  \end{justify}
+}
+
+\newenvironment{JobDescription}{%
+  \vspace{\gapJobDescriptionBefore}
+  \begin{justify}
+  \begin{itemize}[label=\textbullet,leftmargin=2ex,nosep]
+}{%
+  \end{itemize}
+  \vspace{\gapJobDescriptionAfter}
+  \end{justify}
+}
+
+
+% ----------------------------------------------------------------------------
+% Define environment for Education section.
+\newenvironment{EducationSection}{%
+  \vspace{\gapAfterSectionTitle}
+  \begin{center}
+}{%
+  \end{center}
+}
+
+% Define Education entry formatting.
+% Usage: \Degree{<1-date>}{<2-location>}{<3-school>}{<4-major>}{<5-description>}
+\newcommand*{\Degree}[5]{%
+  \vspace{\gapBetweenEntry}
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth-4.5cm} R{4.5cm}}
+    \styleSchoolName{#3} & \styleLocation{#2} \\
+      \styleDegreeTitle{#4} & \styleDate{#1} \\
+      \multicolumn{2}{L{0.95\textwidth}}{\styleDescription{#5}}
+  \end{tabular*}%
+}
+
+
+% ----------------------------------------------------------------------------
+% Define environment for Experience section.
+\newenvironment{ExperienceSection}{%
+  \vspace{\gapAfterSectionTitle}
+}
+
+% Define Experience entry formatting.
+% Usage: \Job{<1-date>}{<2-location>}{<3-company>}{4-subcompany}{<5-position>}{<6-description>}
+\newcommand*{\Job}[6]{%
+  \vspace{\gapBetweenEntry}
+  \begin{tabular}{l|p{0.8\textwidth}}
+    \ifthenelse{\isempty{#4}}
+      {\styleDate{#1} & \styleJobTitle{#5} \formatSeperator
+            \styleCompanyName{#3} \\
+        \styleLocation{#2} & \styleDescription{#6}}
+      {\styleDate{#1} & \styleJobTitle{#5} \formatSeperator
+            \styleCompanyName{#3} (\styleSubCompany{#4}) \\
+        \styleLocation{#2} & \styleDescription{#6}}
+  \end{tabular}%
+}
+
+
+% ----------------------------------------------------------------------------
+% Define environment for Projects section.
+\newenvironment{ProjectSection}{%
+  \vspace{\gapAfterSectionTitle}
+  \begin{center}
+}{%
+  \end{center}
+}
+
+% Define Project entry formatting.
+% Usage: \Project{<title>}{<extra-info>}{<description>}
+\newcommand*{\Project}[3]{%
+  \vspace{\gapBetweenEntry}
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth-4.5cm} R{4.5cm}}
+    \ifthenelse{\isempty{#2}}
+      {\styleProjectName{#1} \\
+        \multicolumn{2}{L{0.98\textwidth}}{\styleDescription{#3}}}
+      {\styleProjectName{#1} (\styleProjectExtra{#2}) \\
+        \multicolumn{2}{L{0.95\textwidth}}{\styleDescription{#3}}}
+  \end{tabular*}%
+}
+
+
+% ----------------------------------------------------------------------------
+% Define environment for Honors & Awards section.
+%\newenvironment{AwardSection}{%
+%  \vspace{\gapAfterSectionTitle}
+%  \vspace{\gapBetweenEntry}
+%  \begin{center}
+%    \setlength\tabcolsep{0pt}
+%    \setlength{\extrarowheight}{0pt}
+%    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth-4.0cm} R{2.5cm}}
+%}{%
+%    \end{tabular*}
+%  \end{center}
+%}
+%
+%% Define honor/award entry.
+%% Usage: \Award{<rank>}{<title>}{<location>}{<date>}
+%\newcommand*{\Award}[4]{%
+%  {#4} & {#1}, {#2} & {#3} \\
+%}
+
+
+% ----------------------------------------------------------------------------
+% Define environment for Skill section.
+\newenvironment{SkillSection}{%
+  \vspace{\gapAfterSectionTitle}
+  \vspace{\gapBetweenEntry}
+  \begin{center}
+    \setlength\tabcolsep{1ex}
+    \setlength{\extrarowheight}{0pt}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\textwidth * \real{0.75}}}
+}{%
+    \end{tabular*}
+  \end{center}
+}
+
+% Define Skill entry formatting (single line).
+% Usage: \Skill{<category>}{<skill-set>}
+\newcommand*{\Skill}[2]{%
+  \styleSkillCategory{#1} & \styleSkillSet{#2} \\
+}
+
+
+
+
+% ============================================================================
+% FORMATTING OPTIONS
+% ============================================================================
+% For non-numbered pages.
+\pagestyle{empty}
+
+% Define header spacing.
+\newcommand{\gapHeaderName}{1mm}
+\newcommand{\gapHeaderInfo}{1mm}
+\newcommand{\gapIcon}{\space}
+
+% Define generic section spacing.
+\newcommand{\gapBetweenSection}{0mm}
+\newcommand{\gapAfterSectionTitle}{-1mm}
+\newcommand{\gapBetweenEntry}{1mm}
+\newcommand{\gapDescriptionBefore}{-4mm}
+\newcommand{\gapDescriptionAfter}{-4mm}
+
+% Define custom section spacing.
+\newcommand{\gapJobDescriptionBefore}{-2mm}
+\newcommand{\gapJobDescriptionAfter}{-5mm}
+
+% Miscellaneous formatting shortcuts.
+\newcommand{\formatSeperator}{\enskip\textbar\enskip}
+
+% Customize section titles.
+\titleformat{\section}{\headerfont\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{3pt}{3pt}
+
+% Use to align tabular elements.
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+
+
+% ============================================================================
+% STYLING DEFINITIONS
+% ============================================================================
+\newcommand*{\styleHeaderName}[1]{{\headerfont\Huge\bfseries #1}}
+\newcommand*{\styleHeaderInfo}[1]{{\headerfont\normalsize #1}}
+
+\newcommand*{\styleLocation}[1]{{\normalsize\itshape #1}}
+\newcommand*{\styleDate}[1]{{\normalsize #1}}
+\newcommand*{\styleDescription}[1]{{\small #1}}
+
+% For Education entry elements.
+\newcommand*{\styleSchoolName}[1]{{\large\bfseries #1}}
+\newcommand*{\styleDegreeTitle}[1]{{\large\scshape #1}}
+
+% For Experience entry elements.
+\newcommand*{\styleCompanyName}[1]{{\large\scshape #1}}
+\newcommand*{\styleJobTitle}[1]{{\large\bfseries #1}}
+\newcommand*{\styleSubCompany}[1]{{\normalsize #1}}
+
+% For Project entry elements.
+\newcommand*{\styleProjectName}[1]{{\large\bfseries #1}}
+\newcommand*{\styleProjectExtra}[1]{{\normalsize #1}}
+
+% For Skill entry elements.
+\newcommand*{\styleSkillCategory}[1]{{\normalsize\bfseries #1}}
+\newcommand*{\styleSkillSet}[1]{{\normalsize #1}}
+
+
+
+
+% ============================================================================
+% MAIN DOCUMENT
+% ============================================================================
+\begin{document}
+
+% ----------------------------------------------------------------------------
+% HEADER
+% ----------------------------------------------------------------------------
+\begin{center}
+  \styleHeaderName{Kenny Ng}%
+  \\[\gapHeaderName]%
+  \styleHeaderInfo{%
+    % Phone Number
+    \faMobile \gapIcon +1 (000) 000-0000%
+    \formatSeperator%
+    % E-mail Address
+    \faEnvelopeO \gapIcon \href{mailto:name@college.edu}{name\textit{@}college.edu}%
+    \formatSeperator%
+    % Personal Website
+    \faHome \gapIcon \href{http://www.kennyng.org}{kennyng.org}%
+    \formatSeperator%
+    % Github
+    \faGithub \gapIcon \href{https://github.com/kennyng}{github.com/kennyng}%
+  } \vspace{\gapHeaderInfo}%
+\end{center}
+
+
+
+
+% ----------------------------------------------------------------------------
+% SECTION: Education
+% ----------------------------------------------------------------------------
+\section{Education}
+\begin{EducationSection}
+  \Degree
+    {Month YEAR} % Date(s)
+    {Stanford, CA} % Location
+    {Stanford University} % Institution
+    {B.S. in Mathematical and Computational Science} % Degree
+    {
+      \begin{Description} % Extra Information
+        \item {Relevant Coursework:}
+            \subitem {Each subitem is a non-bulleted list of courses.}
+            \subitem {List only the most important and most relevant courses.}
+      \end{Description}
+    }
+\end{EducationSection}
+
+
+
+
+% ----------------------------------------------------------------------------
+% SECTION: Experience
+% ----------------------------------------------------------------------------
+\section{Experience}
+\begin{ExperienceSection}
+  \Job
+    {01/2017 -- 02/2017} % Date(s)
+    {San Francisco, CA} % Location
+    {MyCompany} % Company
+    {CompanyInfo} % Company Affiliations/Alias
+    {Software Engineer} % Position
+    {
+      \begin{JobDescription} % Description of Tasks/Responsibilities
+        \item {Each item is bulleted with no indent.}
+            \subitem {Subitem is indented with no bullet.}
+        \item {Describe what you did using active verbs and quantify results.}
+        \item {Optionally: list some of the tools and technologies used.}
+      \end{JobDescription}
+    }
+
+  \Job
+    {06/2016 -- 08/2016} % Date(s)
+    {San Francisco, CA} % Location
+    {MyCompany} % Company
+    {CompanyInfo} % Company Affiliations/Alias
+    {Software Engineer} % Position
+    {
+      \begin{JobDescription} % Description of Tasks/Responsibilities
+        \item {Each item is bulleted with no indent.}
+            \subitem {Subitem is indented with no bullet.}
+        \item {Describe what you did using active verbs and quantify results.}
+        \item {Optionally: list some of the tools and technologies used.}
+      \end{JobDescription}
+    }
+\end{ExperienceSection}
+
+
+
+
+% ----------------------------------------------------------------------------
+% SECTION: Projects
+% ----------------------------------------------------------------------------
+\section{Projects}
+\begin{ProjectSection}
+  \Project
+    {My Awesome Project} % Project Title
+    {extra info} % Extra Info
+    {
+      \begin{Description} % Project Description
+        \item {Describe the project: objective, goals, etc.}
+        \item {Explain what you did; describe achievements or results (quantify).}
+      \end{Description}
+    }
+
+  \Project
+    {\href{https://github.com/kennyng}{My Awesome Project Link}} % Project Title
+    {extra info} % Extra Info
+    {
+      \begin{Description} % Project Description
+        \item {Describe the project: objective, goals, etc.}
+        \item {Explain what you did; describe achievements or results (quantify).}
+      \end{Description}
+    }
+\end{ProjectSection}
+
+
+
+
+% ----------------------------------------------------------------------------
+% SECTION: Skills
+% ----------------------------------------------------------------------------
+\section{Skills}
+\begin{SkillSection}
+    \Skill
+        {Spoken Languages:} % Category
+        {English, Cantonese Chinese, Mandaring Chinese, Spanish} % List of Skills
+
+    \Skill
+        {Programming Languages:} % Category
+        {Python, C, JavaScript, R, Go, Java, SQL, MATLAB, C++, C\#, Haskell} % List of Skills
+
+    \Skill
+        {Technologies:} % Category
+        {List of items related to the category} % List of Skills
+\end{SkillSection}
+
+\end{document}
