@@ -134,10 +134,10 @@
   \vspace{\gapBetweenEntry}
   \begin{tabular}{l|p{0.8\textwidth}}
     \ifthenelse{\isempty{#4}}
-      {\styleDate{#1} & \styleJobTitle{#5} \formatSeperator
+      {\styleDate{#1} & \styleJobTitle{#5}\formatSeparator
             \styleCompanyName{#3} \\
         \styleLocation{#2} & \styleDescription{#6}}
-      {\styleDate{#1} & \styleJobTitle{#5} \formatSeperator
+      {\styleDate{#1} & \styleJobTitle{#5}\formatSeparator
             \styleCompanyName{#3} (\styleSubCompany{#4}) \\
         \styleLocation{#2} & \styleDescription{#6}}
   \end{tabular}%
@@ -191,18 +191,19 @@
 
 
 % ----------------------------------------------------------------------------
-% Define environment for Skill section.
+% Define environment for Skills section.
 \newenvironment{SkillSection}{%
   \vspace{\gapAfterSectionTitle}
   \vspace{\gapBetweenEntry}
   \begin{center}
-    \setlength\tabcolsep{1ex}
+    \setlength{\tabcolsep}{1em}
     \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\textwidth * \real{0.75}}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{0.75\textwidth}}
 }{%
     \end{tabular*}
   \end{center}
 }
+
 
 % Define Skill entry formatting (single line).
 % Usage: \Skill{<category>}{<skill-set>}
@@ -236,7 +237,7 @@
 \newcommand{\gapJobDescriptionAfter}{-5mm}
 
 % Miscellaneous formatting shortcuts.
-\newcommand{\formatSeperator}{\enskip\textbar\enskip}
+\newcommand{\formatSeparator}{\enskip\textbar\enskip}
 
 % Customize section titles.
 \titleformat{\section}{\headerfont\Large\scshape\raggedright}{}{0em}{}[\titlerule]
@@ -294,13 +295,13 @@
   \styleHeaderInfo{%
     % Phone Number
     \faMobile \gapIcon +1 (000) 000-0000%
-    \formatSeperator%
+    \formatSeparator%
     % E-mail Address
     \faEnvelopeO \gapIcon \href{mailto:name@college.edu}{name\textit{@}college.edu}%
-    \formatSeperator%
+    \formatSeparator%
     % Personal Website
     \faHome \gapIcon \href{http://www.kennyng.org}{kennyng.org}%
-    \formatSeperator%
+    \formatSeparator%
     % Github
     \faGithub \gapIcon \href{https://github.com/kennyng}{github.com/kennyng}%
   } \vspace{\gapHeaderInfo}%
@@ -406,7 +407,7 @@
 \begin{SkillSection}
     \Skill
         {Spoken Languages:} % Category
-        {English, Cantonese Chinese, Mandaring Chinese, Spanish} % List of Skills
+        {English, Cantonese Chinese, Mandarin Chinese, Spanish} % List of Skills
 
     \Skill
         {Programming Languages:} % Category
